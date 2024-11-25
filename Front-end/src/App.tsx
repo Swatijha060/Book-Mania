@@ -1,33 +1,32 @@
-import Footer from "./components/Footer/Footer";
-import SideBar from "./components/SideBar";
+
 import About from "./pages/About/about";
 import Home from "./pages/Home/home";
 import {   Route, Routes } from "react-router-dom";
 import MyLibrary from "./pages/MyLibrary/MyLibrary";
-// import Login from "./pages/Login/login";
+import Login from "./pages/Login/Login"; // Import Login component
+import AuthLayouts from "./Layouts/AuthLayouts";
+import MainLayouts from "./Layouts/MainLayouts";
+
 // import Register from "./pages/Register/register";
 // import Profile from "./pages/Profile/profile";
 
 
 function App() {
   return (
-    <div className=" relative  flex-row w-fit h-screen">
-      <div className="flex flex-row">
-      <SideBar />
-     
-      <div className="w-full  bg-red-300 p-4">
-        
-    
       <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/mylibrary" element={<MyLibrary />} />
+        <Route element={<MainLayouts/>}>{/**This is for the layout separations */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/mylibrary" element={<MyLibrary />} />
+        </Route>
+        
+      
+      <Route element={<AuthLayouts/>}> {/* AuthLayouts component for protected routes */}
+        <Route path="/login" element={<Login />} /> {/* Login component */}
+      </Route>
       </Routes>
     
-      </div>
-      </div>
-      <Footer />
-      </div>
+      
   );
     
 }

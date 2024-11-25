@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import Footer from "../components/Footer/Footer"
+import Footer from "../components/Footer"
 import SideBar from "../components/SideBar"
 
 
@@ -12,7 +12,7 @@ const MainLayouts = () => {
               <SideBar />
 
               <div className="w-full bg-red-300 p-4">
-                  <Outlet />
+                  <Outlet/>
               </div>
           </div>
           <Footer />

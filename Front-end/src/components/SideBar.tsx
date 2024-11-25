@@ -8,7 +8,7 @@ const SideBar:  React.FC = () => {
     <div className="bg-black text-white w-1/5 min-w-[200px] min-h-screen sticky p-6 flex flex-col">
       <h1 className="text-3xl font-bold mb-10">BookMania</h1>
       <nav>
-        <Link to="/home" className="flex items-center mb-6 text-lg hover:text-[#A85C5C]">
+        <Link to="/" className="flex items-center mb-6 text-lg hover:text-[#A85C5C]">
           <FaHome className="mr-4" /> Home
         </Link>
         <Link to="/about" className="flex items-center mb-6 text-lg hover:text-[#A85C5C]">
