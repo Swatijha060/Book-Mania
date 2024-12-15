@@ -6,7 +6,9 @@ const SideBar: React.FC = () => {
   return (
     <div className="bg-black text-white  w-1/5 min-w-[200px] min-h-screen sticky p-6 flex flex-col">
       <h1 className="text-3xl font-bold mb-10">
-        <img src="BookMania-Logo.png" />
+        <Link to="/">
+          <img src="BookMania-Logo.png" />
+        </Link>
       </h1>
       <nav>
         <Link

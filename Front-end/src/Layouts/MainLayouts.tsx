@@ -8,7 +8,7 @@ const MainLayouts = () => {
       <div className="relative flex-row min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="flex flex-row">
           <SideBar />
-          <div className="w-full bg-red-100 dark:bg-gray-900 p-4">
+          <div className="w-full bg-red-400 dark:bg-gray-900 p-4">
             <Outlet />
           </div>
         </div>
