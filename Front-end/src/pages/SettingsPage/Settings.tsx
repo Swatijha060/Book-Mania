@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Settings: React.FC = () => {
   const [userIcon, setUserIcon] = useState<string>("/avatar.svg");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const handleIconChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -22,6 +25,11 @@ const Settings: React.FC = () => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    navigate("/login");
   };
 
   return (
@@ -76,12 +84,24 @@ const Settings: React.FC = () => {
         />
       </div>
 
-      <button
-        className="px-6 py-2 text-white bg-red-400 rounded-lg shadow hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        onClick={() => alert("Settings Saved!")}
-      >
-        Save Changes
-      </button>
+      {/* Buttons */}
+      <div className="flex justify-between items-center mt-6">
+        {/* Save Changes Button */}
+        <button
+          className="px-6 py-2 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={() => alert("Settings Saved!")}
+        >
+          Save Changes
+        </button>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="px-6 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 };
