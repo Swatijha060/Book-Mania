@@ -13,11 +13,11 @@ const DarkModeToggle: React.FC<DarkModeToggleProps> = ({
   return (
     <button
       onClick={toggleDarkMode}
-      className="focus:outline-none"
+      className="focus:outline-none text-center bg-gray-300 p-2 rounded-full shadow-md hover:shadow-lg"
       aria-label="Toggle Dark Mode"
     >
       {darkMode ? (
-        <MdOutlineWbSunny size={28} className="text-yellow-300" />
+        <MdOutlineWbSunny size={28} className="text-yellow-400" />
       ) : (
         <MdOutlineDarkMode size={28} className="text-gray-600" />
       )}

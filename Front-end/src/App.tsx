@@ -1,58 +1,82 @@
-import About from "./pages/About/about";
+import React, { useState } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Home from "./pages/Home/home";
-import { Route, Routes } from "react-router-dom";
+import About from "./pages/About/about";
+import Genre from "./pages/Genre/Genre";
+import BookDetails from "./components/BookDetails";
+import MyLibrary from "./pages/MyLibrary/MyLibrary";
 import SettingsPage from "./pages/SettingsPage/Settings";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/Signup/Signup";
-import AuthLayouts from "./Layouts/AuthLayouts";
+import AdminDashboard from "./components/Admin/AdminDashboard";
 import MainLayouts from "./Layouts/MainLayouts";
-import Genre from "./pages/Genre/Genre";
-import BookDetails from "./components/BookDetails";
-import { useState } from "react";
-import MyLibrary from "./pages/MyLibrary/MyLibrary";
+import AuthLayouts from "./Layouts/AuthLayouts";
+import NotFound from "./pages/NotFound/NotFound";
+import { RoleProvider, useRole } from "./components/Admin/RoleContext";
+import { ThemeProvider } from "./components/ThemeContext";
 
-// import Register from "./pages/Register/register";
-// import Profile from "./pages/Profile/profile";
+// Protected Admin Route Component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { role } = useRole();
+  if (role !== "admin") {
+    return <Navigate to="/" />; // Redirect to home if not admin
+  }
+  return <>{children}</>; // Render children for admin
+};
 
 function App() {
   const [bookmarkedBooks, setBookmarkedBooks] = useState<any[]>([]);
 
-  // Handle bookmark for books
+  // Bookmark Handler
   const handleBookmark = (book: any) => {
     setBookmarkedBooks((prev) => {
-      // Prevent duplicates
       if (!prev.some((b) => b.id === book.id)) {
         return [...prev, book];
       }
-      return prev;
+      return prev; // If the book is already bookmarked, do nothing
     });
   };
 
   return (
-    <Routes>
-      <Route element={<MainLayouts />}>
-        {/* Routes with MainLayouts component */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route
-          path="/mylibrary"
-          element={<MyLibrary books={bookmarkedBooks} />}
-        />
-        <Route path="/Settings" element={<SettingsPage />} />
+    <ThemeProvider>
+      <RoleProvider>
+        <Routes>
+          {/* Main Layout */}
+          <Route element={<MainLayouts />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/mylibrary"
+              element={<MyLibrary books={bookmarkedBooks} />}
+            />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/genre" element={<Genre />} />
+            <Route path="/genre/book/:bookId" element={<BookDetails />} />
 
-        {/* Genre page that shows a list of genres */}
-        <Route path="/genre" element={<Genre />} />
+            {/* Protected Admin Dashboard Route */}
+            <Route
+              path="/AdminDashboard"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
 
-        {/* Render individual book details when a user clicks on a book */}
-        <Route path="/genre/book/:bookId" element={<BookDetails />} />
-      </Route>
+          {/* Authentication Layout */}
+          <Route element={<AuthLayouts />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
 
-      <Route element={<AuthLayouts />}>
-        {/* Auth-related routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Route>
-    </Routes>
+          {/* Catch-All Route for 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </RoleProvider>
+    </ThemeProvider>
   );
 }
 

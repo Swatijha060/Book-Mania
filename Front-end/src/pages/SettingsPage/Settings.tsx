@@ -33,7 +33,7 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-blue-200 dark:bg-gray-800 shadow-lg rounded-lg">
       <h1 className="text-3xl font-bold mb-8 dark:text-white">Settings</h1>
 
       {/* Change User Icon */}

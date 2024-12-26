@@ -1,49 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { CiSearch } from "react-icons/ci";
-import { MdOutlineDarkMode, MdOutlineWbSunny } from "react-icons/md";
 import { Link } from "react-router-dom";
 import BookCarousel from "../../components/BookCarousel";
+import { useTheme } from "../../components/ThemeContext";
+import DarkModeToggle from "../../components/DarkModeToggle";
 
 const Home: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-  };
+  const { darkMode, toggleDarkMode } = useTheme(); // Get dark mode functionality from context
 
   return (
-    <div
-      className={`p-2 min-h-screen ${
-        darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
-      }`}
-    >
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-10">
+    <div className="p-1  min-h-screen">
+      <div className="flex justify-between items-center mb-10 relative">
+        {/* Greeting Text */}
         <div>
           <h2 className="text-3xl font-bold">Hello, User!</h2>
           <h4 className="text-xl">Which book do you want to read today?</h4>
-        </div>
-        <div className="flex items-center space-x-4">
-          {/* Dark Mode Icon */}
-          <button
-            onClick={toggleDarkMode}
-            className="focus:outline-none"
-            aria-label="Toggle Dark Mode"
-          >
-            {darkMode ? (
-              <MdOutlineWbSunny size={28} className="text-yellow-300" />
-            ) : (
-              <MdOutlineDarkMode size={28} className="text-gray-600" />
-            )}
-          </button>
-          {/* User Avatar */}
-          <Link to="/Settings">
-            <img
-              src="/avatar.svg"
-              alt="User Avatar"
-              className="w-12 h-12 rounded-full border cursor-pointer"
-            />
-          </Link>
         </div>
       </div>
 
@@ -116,6 +87,7 @@ const Home: React.FC = () => {
         </nav>
       </div>
 
+      {/* Book Carousel */}
       <BookCarousel />
     </div>
   );

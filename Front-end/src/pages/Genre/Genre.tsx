@@ -58,7 +58,7 @@ const Genre = () => {
               <div
                 key={index}
                 onClick={() => handleGenreClick(genre.name)} // Set the genre
-                className="cursor-pointer bg-white p-8 rounded-lg shadow-md hover:bg-red-100 flex flex-col items-center justify-center text-lg font-semibold transition"
+                className="cursor-pointer bg-red-200 p-8 rounded-lg shadow-md hover:bg-blue-100 flex flex-col items-center justify-center text-lg font-semibold transition"
               >
                 <span className="text-3xl mb-2">{genre.icon}</span>
                 {genre.name}

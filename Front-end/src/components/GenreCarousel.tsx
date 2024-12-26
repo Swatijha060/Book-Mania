@@ -4,9 +4,7 @@ import Slider from "react-slick";
 import { TiArrowRight } from "react-icons/ti";
 import { CiBookmark } from "react-icons/ci";
 import { booksData } from "../constants/data";
-import { CustomPrevArrow, CustomNextArrow } from "../constants/constants";
 
-// Book interface
 interface Book {
   id: number;
   cover: string;
@@ -15,19 +13,51 @@ interface Book {
   description: string;
   rating: number;
   pages: number;
-  // publisher: string;
-  // published: string;
-  // language: string;
-  publisher?: string; // Make optional
+  publisher?: string;
   published?: string;
   language?: string;
 }
 
-// BookCarouselProps interface
 interface BookCarouselProps {
   onBookmark: (book: Book) => void;
   genre?: string;
 }
+//custom next arrow
+const CustomNextArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "block",
+        right: "15px",
+        top: "50%",
+        transform: "translateY(-50%)",
+      }}
+      onClick={onClick}
+    >
+      <TiArrowRight size={30} color="black" />
+    </div>
+  );
+};
+
+// Custom Prev Arrow
+const CustomPrevArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{
+        ...style,
+        display: "block",
+        left: "10px",
+        zIndex: 10,
+      }}
+      onClick={onClick}
+    ></div>
+  );
+};
 
 // Carousel settings
 const settings = {
@@ -36,8 +66,8 @@ const settings = {
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 1,
-  nextArrow: <CustomNextArrow />,
-  prevArrow: <CustomPrevArrow />,
+  nextArrow: <CustomNextArrow />, // Custom Next Arrow
+  prevArrow: <CustomPrevArrow />, // Custom Prev Arrow
   responsive: [
     {
       breakpoint: 1024,
@@ -56,7 +86,6 @@ const settings = {
   ],
 };
 
-// GenreCarousel Component
 const GenreCarousel: React.FC<BookCarouselProps> = ({ onBookmark, genre }) => {
   const navigate = useNavigate();
 
@@ -64,7 +93,6 @@ const GenreCarousel: React.FC<BookCarouselProps> = ({ onBookmark, genre }) => {
     navigate(`/genre/book/${book.id}`, { state: book });
   };
 
-  // Get books for a specific genre
   const getBooksForGenre = (genre: string) => {
     switch (genre) {
       case "Popular":
@@ -78,15 +106,15 @@ const GenreCarousel: React.FC<BookCarouselProps> = ({ onBookmark, genre }) => {
     }
   };
 
-  // Get books for current selected genre
   const booksForCurrentGenre = getBooksForGenre(genre || "Popular");
 
   return (
     <section className="mb-6">
-      <div className="text-2xl flex font-bold justify-center mb-6">
-        {genre}
-        <button>
-          <TiArrowRight size={40} />
+      <div className="text-2xl flex items-center font-bold justify-between mb-6">
+        <span>{genre}</span>
+        <button className="flex items-center space-x-2 text-blue-500 hover:text-blue-700">
+          <span>More</span>
+          <TiArrowRight size={30} />
         </button>
       </div>
       <Slider {...settings}>
@@ -105,9 +133,9 @@ const GenreCarousel: React.FC<BookCarouselProps> = ({ onBookmark, genre }) => {
                 <h3 className="text-sm font-bold truncate">{book.title}</h3>
                 <p className="text-xs text-gray-600">{book.author}</p>
                 <CiBookmark
-                  className="cursor-pointer dark:bg-blue-400"
+                  className="cursor-pointer"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering book click
+                    e.stopPropagation();
                     alert("Bookmarked");
                     onBookmark(book);
                   }}
