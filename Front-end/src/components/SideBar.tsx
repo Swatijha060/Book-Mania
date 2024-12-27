@@ -1,46 +1,67 @@
 import React from "react";
 import { FaHome, FaInfoCircle, FaBook, FaCog } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SideBar: React.FC = () => {
+  const activeClass = "text-[#A85C5C] font-bold"; // Define active styles
+  const defaultClass = "text-white hover:text-[#A85C5C]"; // Default link styles
+
   return (
-    <div className="bg-black text-white  w-1/5 min-w-[200px] min-h-screen sticky p-6 flex flex-col">
+    <div className="bg-black text-white w-1/5 min-w-[200px] min-h-screen sticky p-6 flex flex-col">
       <h1 className="text-3xl font-bold mb-10">
-        <Link to="/">
-          <img src="BookMania-Logo.png" />
-        </Link>
+        <NavLink to="/">
+          <img src="BookMania-Logo.png" alt="BookMania Logo" />
+        </NavLink>
       </h1>
       <nav>
-        <Link
+        <NavLink
           to="/"
-          className="flex items-center mb-6 text-lg hover:text-[#A85C5C]"
+          className={({ isActive }) =>
+            `flex items-center mb-6 text-lg ${
+              isActive ? activeClass : defaultClass
+            }`
+          }
         >
           <FaHome className="mr-4" /> Home
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/about"
-          className="flex items-center mb-6 text-lg hover:text-[#A85C5C]"
+          className={({ isActive }) =>
+            `flex items-center mb-6 text-lg ${
+              isActive ? activeClass : defaultClass
+            }`
+          }
         >
           <FaInfoCircle className="mr-4" /> About Us
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/genre"
-          className="flex items-center mb-6 text-lg hover:text-[#A85C5C]"
+          className={({ isActive }) =>
+            `flex items-center mb-6 text-lg ${
+              isActive ? activeClass : defaultClass
+            }`
+          }
         >
           <FaBook className="mr-4" /> Genre
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/mylibrary"
-          className="flex items-center mb-6 text-lg hover:text-[#A85C5C]"
+          className={({ isActive }) =>
+            `flex items-center mb-6 text-lg ${
+              isActive ? activeClass : defaultClass
+            }`
+          }
         >
           <FaBook className="mr-4" /> My Library
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/settings"
-          className="flex items-center text-lg hover:text-[#A85C5C]"
+          className={({ isActive }) =>
+            `flex items-center text-lg ${isActive ? activeClass : defaultClass}`
+          }
         >
           <FaCog className="mr-4" /> Settings
-        </Link>
+        </NavLink>
       </nav>
     </div>
   );

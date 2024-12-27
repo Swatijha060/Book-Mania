@@ -1,53 +1,83 @@
-import About from "./pages/About/about";
+import React, { useState } from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Home from "./pages/Home/home";
-import { Route, Routes } from "react-router-dom";
-// import MyLibrary from "./pages/MyLibrary/MyLibrary";
-import SettingsPage from "./pages/SettingsPage/Settings";
-import Login from "./pages/Login/Login"; // Import Login component
-import AuthLayouts from "./Layouts/AuthLayouts";
-import MainLayouts from "./Layouts/MainLayouts";
+import About from "./pages/About/about";
 import Genre from "./pages/Genre/Genre";
 import BookDetails from "./components/BookDetails";
-import { useState } from "react";
 import MyLibrary from "./pages/MyLibrary/MyLibrary";
-import GenreCarousel from "./components/GenreCarousel";
+import SettingsPage from "./pages/SettingsPage/Settings";
+import Login from "./pages/Login/Login";
+import SignUp from "./pages/Signup/Signup";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import MainLayouts from "./Layouts/MainLayouts";
+import AuthLayouts from "./Layouts/AuthLayouts";
+import NotFound from "./pages/NotFound/NotFound";
+import { RoleProvider, useRole } from "./components/Admin/RoleContext";
+import { ThemeProvider } from "./components/ThemeContext";
 
-// import Register from "./pages/Register/register";
-// import Profile from "./pages/Profile/profile";
+// Protected Admin Route Component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { role } = useRole();
+  if (role !== "admin") {
+    return <Navigate to="/" />; // Redirect to home if not admin
+  }
+  return <>{children}</>; // Render children for admin
+};
 
 function App() {
   const [bookmarkedBooks, setBookmarkedBooks] = useState<any[]>([]);
+
+  // Bookmark Handler
   const handleBookmark = (book: any) => {
     setBookmarkedBooks((prev) => {
-      // Prevent duplicates
       if (!prev.some((b) => b.id === book.id)) {
         return [...prev, book];
       }
-      return prev;
+      return prev; // If the book is already bookmarked, do nothing
     });
   };
 
   return (
-    <Routes>
-      <Route element={<MainLayouts />}>
-        {/**This is for the layout separations */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route
-          path="/mylibrary"
-          element={<MyLibrary books={bookmarkedBooks} />}
-        />
-        <Route path="/Settings" element={<SettingsPage />} />
-        <Route path="/genre" element={<GenreCarousel onBookmark={handleBookmark} />} />
-        <Route path="/genre/book/:bookId" element={<BookDetails />} />
-      </Route>
+    <ThemeProvider>
+      <RoleProvider>
+        <Routes>
+          {/* Main Layout */}
+          <Route element={<MainLayouts />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route
+              path="/mylibrary"
+              element={<MyLibrary books={bookmarkedBooks} />}
+            />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/genre" element={<Genre />} />
+            <Route path="/genre/book/:bookId" element={<BookDetails />} />
 
-      <Route element={<AuthLayouts />}>
-        {" "}
-        {/* AuthLayouts component for protected routes */}
-        <Route path="/login" element={<Login />} /> {/* Login component */}
-      </Route>
-    </Routes>
+            {/* Protected Admin Dashboard Route */}
+            <Route
+              path="/AdminDashboard"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+
+          {/* Authentication Layout */}
+          <Route element={<AuthLayouts />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
+
+          {/* Catch-All Route for 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </RoleProvider>
+    </ThemeProvider>
   );
 }
+
 export default App;
