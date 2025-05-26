@@ -10,33 +10,25 @@ import {
 } from "react-icons/fa";
 import { MdOutlineLanguage } from "react-icons/md";
 import { BsSearch } from "react-icons/bs";
-
-// Updated genres list to match booksData structure
-const genres = [
-  { name: "Fiction", icon: <FaBook /> },
-  { name: "Non-Fiction", icon: <FaBookOpen /> },
-  { name: "Mystery", icon: <BsSearch /> },
-  { name: "Romance", icon: <FaHeart /> },
-  { name: "Sci-Fi", icon: <FaRocket /> },
-  { name: "Fantasy", icon: <FaDragon /> },
-  { name: "Cultural and Regional", icon: <MdOutlineLanguage /> },
-  { name: "Other Popular Genres", icon: <FaStar /> },
-];
+import { useGetAllGenresQuery } from "../../redux/api/genreApiSlice";
 
 const Genre = () => {
+  const { data: genreData, isLoading, isError } = useGetAllGenresQuery({});
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [bookmarkedBooks, setBookmarkedBooks] = useState<any[]>([]);
 
+  console.log("Genre data:", genreData); // Debug API response
+
   // Handle genre click
   const handleGenreClick = (genre: string) => {
-    setSelectedGenre(genre); // Set the selected genre for the carousel
+    setSelectedGenre(genre);
   };
 
   // Handle bookmarking of books
   const handleBookmark = (book: any) => {
     setBookmarkedBooks((prev) => {
       if (!prev.some((b) => b.id === book.id)) {
-        return [...prev, book]; // Add book to bookmarks if not already added
+        return [...prev, book];
       }
       return prev;
     });
@@ -44,12 +36,52 @@ const Genre = () => {
 
   // Handle back to genres
   const handleBackToGenres = () => {
-    setSelectedGenre(null); // Go back to genre grid
+    setSelectedGenre(null);
   };
+
+  // Helper function to assign icons based on genre name
+  const getGenreIcon = (genreName: string) => {
+    switch (genreName.toLowerCase()) {
+      case "fiction":
+        return <FaBook />;
+      case "non-fiction":
+        return <FaBookOpen />;
+      case "mystery":
+        return <BsSearch />;
+      case "romance":
+        return <FaHeart />;
+      case "sci-fi":
+        return <FaRocket />;
+      case "fantasy":
+        return <FaDragon />;
+      case "cultural and regional":
+        return <MdOutlineLanguage />;
+      default:
+        return <FaStar />;
+    }
+  };
+
+  // Map API genres to our format with icons
+  const genres = Array.isArray(genreData?.data)
+    ? genreData.data.map((genre: { name: string }) => ({
+        name: genre.name,
+        icon: getGenreIcon(genre.name),
+      }))
+    : [];
+  console.log("Mapped genres:", genres); // Debug mapped genres
+
+  if (isLoading) return <div className="p-6 text-center">Loading genres...</div>;
+  if (isError)
+    return (
+      <div className="p-6 text-center text-red-500">
+        Error loading genres. Please ensure you are logged in and try again.
+      </div>
+    );
+  if (genres.length === 0)
+    return <div className="p-6 text-center">No genres available.</div>;
 
   return (
     <div className="p-6 min-h-screen">
-      {/* Render genre grid or carousel based on selectedGenre */}
       {!selectedGenre ? (
         <>
           <h1 className="text-3xl font-bold pb-3 text-center">Genres</h1>
@@ -57,7 +89,7 @@ const Genre = () => {
             {genres.map((genre, index) => (
               <div
                 key={index}
-                onClick={() => handleGenreClick(genre.name)} // Set the genre
+                onClick={() => handleGenreClick(genre.name)}
                 className="cursor-pointer bg-red-200 p-8 rounded-lg shadow-md hover:bg-blue-100 flex flex-col items-center justify-center text-lg font-semibold transition"
               >
                 <span className="text-3xl mb-2">{genre.icon}</span>
@@ -68,21 +100,16 @@ const Genre = () => {
         </>
       ) : (
         <>
-          {/* Back button to genres */}
           <button
-            onClick={handleBackToGenres} // Back to genre grid
+            onClick={handleBackToGenres}
             className="mb-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded shadow"
           >
             Back to Genres
           </button>
           <h1 className="text-2xl font-bold pb-3 text-center">
-            {/* Books in {selectedGenre}*/}
+            Books in {selectedGenre}
           </h1>
-
-          {/* GenreCarousel Component */}
           <GenreCarousel genre={selectedGenre} onBookmark={handleBookmark} />
-
-          {/* Bookmarks Section */}
           {bookmarkedBooks.length > 0 && (
             <p className="text-center mt-4">
               You have bookmarked {bookmarkedBooks.length} book(s).

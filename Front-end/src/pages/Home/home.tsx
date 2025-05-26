@@ -3,17 +3,27 @@ import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import BookCarousel from "../../components/BookCarousel";
 import { useTheme } from "../../components/ThemeContext";
-import DarkModeToggle from "../../components/DarkModeToggle";
+import { useSelector } from "react-redux";
+import { setSearchFilter } from "../../redux/features/books/booksSlice";
+import { useDispatch } from "react-redux";
+
+
 
 const Home: React.FC = () => {
-  const { darkMode, toggleDarkMode } = useTheme(); // Get dark mode functionality from context
+  const { darkMode} = useTheme(); // Get dark mode functionality from context
+  const {userInfo}= useSelector((state:any)=>state.auth);
+  const dispatch = useDispatch();
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchFilter(e.target.value));
+  };
 
   return (
     <div className="p-1  min-h-screen">
       <div className="flex justify-between items-center mb-10 relative">
         {/* Greeting Text */}
         <div>
-          <h2 className="text-3xl font-bold">Hello, User!</h2>
+          <h2 className="text-3xl font-bold">Hello, {userInfo.fullName}!</h2>
           <h4 className="text-xl">Which book do you want to read today?</h4>
         </div>
       </div>
@@ -24,6 +34,7 @@ const Home: React.FC = () => {
           <input
             type="text"
             placeholder="Search for books..."
+            onChange={handleSearch}
             className={`w-full px-14 py-3 border rounded-full shadow-md focus:outline-none focus:ring-2 ${
               darkMode
                 ? "bg-gray-700 text-white border-gray-600 focus:ring-gray-400"
